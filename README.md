@@ -15,6 +15,8 @@ Ubuntu 19.10 EOAN deb package
 * arm
   arm kernel
 
+![Htop screenshot](https://github.com/avafinger/htop-2.2.2/raw/master/htop_2.2.2.png)
+
 # License
 
 [![Build Status](https://travis-ci.org/hishamhm/htop.svg?branch=master)](https://travis-ci.org/hishamhm/htop)
