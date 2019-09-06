@@ -17,6 +17,12 @@ Ubuntu 19.10 EOAN deb package
 
 ![Htop screenshot](https://github.com/avafinger/htop_2.2.2/raw/master/htop_2.2.2.png)
 
+# deb packages
+
+* arm64 (https://github.com/avafinger/htop_2.2.2/releases/tag/v1.0)
+
+    htop_2.2.2-1_arm64.deb
+
 # License
 
 [![Build Status](https://travis-ci.org/hishamhm/htop.svg?branch=master)](https://travis-ci.org/hishamhm/htop)
