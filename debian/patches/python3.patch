@@ -1,0 +1,13 @@
+Description: Run MakeHeader.py in Python 3
+Forwarded: not-needed
+Author: Graham Inggs <ginggs@debian.org>
+Last-Update: 2019-07-22
+
+--- a/scripts/MakeHeader.py
++++ b/scripts/MakeHeader.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python3
+ import os, sys, string, io
+ try:
+    from StringIO import StringIO
