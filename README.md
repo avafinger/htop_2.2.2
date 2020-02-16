@@ -12,7 +12,7 @@ Ubuntu 19.10 EOAN deb package
 
 # deb packages
 
-* armhf (https://github.com/avafinger/htop_2.2.2/releases/tag/v1.0)
+* armhf (https://github.com/avafinger/htop_2.2.2/releases/tag/v1.1)
 
     htop_2.2.2-2_armhf.deb
 
