@@ -12,8 +12,8 @@ Ubuntu 19.10 EOAN deb package
   RK3399 BSP kernel
 * generic
   x64 / Arm kernel
-* arm
-  arm kernel
+* armhf
+  arm kernel (mainline)
 
 ![Htop screenshot](https://github.com/avafinger/htop_2.2.2/raw/master/htop_2.2.2.png)
 
