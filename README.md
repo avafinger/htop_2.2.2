@@ -3,6 +3,8 @@
 Ubuntu 19.10 EOAN deb package
 
 * htop for monitoring CPU Freq, CPU Temp, GPU Temp, VCore on arm64 boards
+* Extended info: Kernel version, OS version, Armbian version, eth0 IP, eth1 IP, wlan0 IP, wlan1 IP, alias
+* Configurable handlers
 
 **Branches:**
 
@@ -17,11 +19,84 @@ Ubuntu 19.10 EOAN deb package
 
 ![Htop screenshot](https://github.com/avafinger/htop_2.2.2/raw/master/htop_2.2.2.png)
 
+![F2 config](https://github.com/avafinger/htop_2.2.2/raw/master/armbian.png)
+
 # deb packages
 
 * arm64 (https://github.com/avafinger/htop_2.2.2/releases/tag/v1.0)
 
     htop_2.2.2-1_arm64.deb
+
+* arm64 (https://github.com/avafinger/htop_2.2.2/releases/tag/v1.2)
+
+    htop_2.2.2-2_arm64.deb
+    
+## Configurable handlers and Alias
+
+The path to grab information depends on how kernel and DTB are built, they change from kernel version and different hardware, handlers have been added to the htop configuration file so you can adjust it to your need.
+
+File configuration is in **~/.config/htop/htoprc** and there is a section you can edit and change the handlers with an editor or programatically.
+
+		# Beware! This file is rewritten by htop when settings are changed in the interface.
+		# The parser is also very primitive, and not human-friendly.
+		fields=0 48 17 18 38 39 40 2 46 47 49 1
+		sort_key=46
+		sort_direction=1
+		hide_threads=0
+		hide_kernel_threads=1
+		hide_userland_threads=0
+		shadow_other_users=0
+		show_thread_names=0
+		show_program_path=1
+		highlight_base_name=0
+		highlight_megabytes=1
+		highlight_threads=1
+		tree_view=0
+		header_margin=1
+		detailed_cpu_time=0
+		cpu_count_from_zero=0
+		update_process_names=0
+		account_guest_in_cpu_meter=0
+		color_scheme=0
+		delay=15
+		left_meters=AllCPUs Memory Swap Kernelversion OSversion Armbianversion
+		left_meter_modes=1 1 1 2 2 2
+		right_meters=Tasks LoadAverage Uptime Eth0 CpuFreq CpuTemp GpuTemp
+		right_meter_modes=2 2 2 2 2 2 2
+		# SBC hardware and Kernel specific path.
+		# Editable manually.
+		BoardName=
+		CpuFreq_handler=
+		CpuTemp_handler=/sys/class/hwmon/hwmon1/temp2_input
+		CpuVCore_l_handler=
+		CpuVCore_b_handler=
+		GpuVCore_handler=
+		GpuTemp_handler=/sys/class/hwmon/hwmon2/temp1_input
+		# Wlan / Eth alias
+		eth0_alias=enp2s0
+		eth1_alias=
+		wlan0_alias=
+		wlan1_alias=
+
+**They are as follow:**
+
+* CpuFreq_handler (CPUFREQ)
+* CpuTemp_handler (CPUTEMP)
+*	CpuVCore_l_handler (CPUVCORE Little cores or normal)
+*	CpuVCore_b_handler (CPUVCORE Big cores)
+* GpuVCore_handler (CPUVCORE)
+*	GpuTemp_handler (GPUTEMP)
+
+** Alias **
+
+Some kernel changes eth0 / eth1 /wlan0 / wlan1 names like so:
+
+    enp2s0: renamed from eth0
+
+in this case you add the alias here:
+
+eth0_alias=**enp2s0**
+
 
 # License
 
