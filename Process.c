@@ -1,6 +1,7 @@
 /*
 htop - Process.c
 (C) 2004-2015 Hisham H. Muhammad
+(C) 2020 Alexander Finger
 Released under the GNU GPL, see the COPYING file
 in the source distribution for its full text.
 */

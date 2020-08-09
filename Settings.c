@@ -59,6 +59,28 @@ typedef struct Settings_ {
    bool accountGuestInCPUMeter;
    bool headerMargin;
 
+   char CpuFreq_handler[256]; 
+   char CpuTemp_handler[256]; 
+   char CpuVCore_l_handler[256];
+   char CpuVCore_b_handler[256];
+   
+   char GpuVCore_handler[256];
+   char GpuTemp_handler[256];
+   
+   char BoardName[128];
+   char KernelVersionFull[256];
+   char KernelVersionShort[64];
+   
+   char IP_wlan0[32];
+   char IP_wlan1[32];
+   char IP_eth0[32];
+   char IP_eth1[32];
+   
+   char eth0_alias[32];
+   char eth1_alias[32];
+   char wlan0_alias[32];
+   char wlan1_alias[32];
+
    bool changed;
 } Settings;
 
@@ -141,6 +163,12 @@ static void Settings_defaultMeters(Settings* this) {
    this->columns[1].modes[r++] = TEXT_METERMODE;
    this->columns[1].names[r] = xStrdup("Uptime");
    this->columns[1].modes[r++] = TEXT_METERMODE;
+   
+   this->columns[1].names[r] = xStrdup("CpuTemp");
+   this->columns[1].modes[r++] = TEXT_METERMODE;
+   this->columns[1].names[r] = xStrdup("CpuFreq");
+   this->columns[1].modes[r++] = TEXT_METERMODE;
+
 }
 
 static void readFields(ProcessField* fields, int* flags, const char* line) {
@@ -244,7 +272,41 @@ static bool Settings_read(Settings* this, const char* fileName) {
       } else if (String_eq(option[0], "right_meter_modes")) {
          Settings_readMeterModes(this, option[1], 1);
          didReadMeters = true;
-      }
+      } else if (String_eq(option[0], "BoardName")) {
+         strcpy(this->BoardName,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "CpuFreq_handler")) {
+         strcpy(this->CpuFreq_handler,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "CpuTemp_handler")) {
+         strcpy(this->CpuTemp_handler,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "CpuVCore_l_handler")) {
+         strcpy(this->CpuVCore_l_handler,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "CpuVCore_b_handler")) {
+         strcpy(this->CpuVCore_b_handler,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "GpuVCore_handler")) {
+         strcpy(this->GpuVCore_handler,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "GpuTemp_handler")) {
+         strcpy(this->GpuTemp_handler,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "eth0_alias")) {
+         strcpy(this->eth0_alias,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "eth1_alias")) {
+         strcpy(this->eth1_alias,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "wlan0_alias")) {
+         strcpy(this->wlan0_alias,option[1]);
+         didReadMeters = true;
+      } else if (String_eq(option[0], "wlan1_alias")) {
+         strcpy(this->wlan1_alias,option[1]);
+         didReadMeters = true;
+      }  
+
       String_freeArray(option);
    }
    fclose(fd);
@@ -320,6 +382,23 @@ bool Settings_write(Settings* this) {
    fprintf(fd, "left_meter_modes="); writeMeterModes(this, fd, 0);
    fprintf(fd, "right_meters="); writeMeters(this, fd, 1);
    fprintf(fd, "right_meter_modes="); writeMeterModes(this, fd, 1);
+   
+   fprintf(fd, "# SBC hardware and Kernel specific path.\n");
+   fprintf(fd, "# Editable manually.\n");
+   fprintf(fd, "BoardName=%s\n", this->BoardName);
+   fprintf(fd, "CpuFreq_handler=%s\n", this->CpuFreq_handler);
+   fprintf(fd, "CpuTemp_handler=%s\n", this->CpuTemp_handler);
+   fprintf(fd, "CpuVCore_l_handler=%s\n", this->CpuVCore_l_handler); 
+   fprintf(fd, "CpuVCore_b_handler=%s\n", this->CpuVCore_b_handler);    
+   fprintf(fd, "GpuVCore_handler=%s\n", this->GpuVCore_handler); 
+   fprintf(fd, "GpuTemp_handler=%s\n", this->GpuTemp_handler); 
+   
+   fprintf(fd, "# Wlan / Eth alias\n");
+   fprintf(fd, "eth0_alias=%s\n",this->eth0_alias);
+   fprintf(fd, "eth1_alias=%s\n",this->eth1_alias);
+   fprintf(fd, "wlan0_alias=%s\n",this->wlan0_alias);
+   fprintf(fd, "wlan1_alias=%s\n",this->wlan1_alias);
+
    fclose(fd);
    return true;
 }

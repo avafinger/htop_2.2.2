@@ -1,3 +1,9 @@
+htop (2.2.2-2) unstable; urgency=medium
+
+  * Add Interface monitoring
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Fri, 07 Aug 2020 17:39:15 -0300
+
 htop (2.2.2-1) unstable; urgency=medium
 
   * Add cpufreq cpucore and thermal monitoring for RK3399

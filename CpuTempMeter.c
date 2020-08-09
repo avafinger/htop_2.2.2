@@ -16,7 +16,7 @@ int CpuTempMeter_attributes[] = {
 };
 
 static void CpuTempMeter_setValues(Meter* this, char* buffer, int len) {
-   int Temp = Platform_getCpuTemp();
+   int Temp = Platform_getCpuTemp(this);
    if (Temp > 1000) {
        Temp /= 1000;
    }

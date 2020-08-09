@@ -1,6 +1,6 @@
 /*
 htop - CpuFreqMeter.c
-(C) 2018 @lex
+(C) 2020 Alexander Finger
 */
 
 #include "CpuFreqMeter.h"
@@ -33,7 +33,7 @@ static void CpuFreqMeter_setValues(Meter* this, char* buffer, int len) {
        cpu = bigLITTLE;
        if (cpu < 0)
            cpu = 0;
-       Freq = Platform_getCpuFreq(cpu);
+       Freq = Platform_getCpuFreq(this, cpu);
        if (Freq > 1000) {
            Freq /= 1000;
        }
@@ -51,7 +51,7 @@ static void CpuFreqMeter_setValues(Meter* this, char* buffer, int len) {
        cpu--;
        if (cpu < 0)
            cpu = 0;
-       Freq = Platform_getCpuFreq(cpu);
+       Freq = Platform_getCpuFreq(this, cpu);
        if (Freq > 1000) {
            Freq /= 1000;
        }
@@ -72,7 +72,7 @@ static void CpuFreqMeter_setValues(Meter* this, char* buffer, int len) {
    }
    
    cpu = 0;
-   Freq = Platform_getCpuFreq(cpu);
+   Freq = Platform_getCpuFreq(this, cpu);
    if (Freq > 1000) {
        Freq /= 1000;
    }

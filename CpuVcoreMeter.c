@@ -1,6 +1,6 @@
 /*
 htop - CpuVcoreMeter.c
-(C) 2018 @lex
+(C) 2020 Alexander Finger
 */
 
 #include "CpuVcoreMeter.h"
@@ -26,7 +26,7 @@ static void CpuVcoreMeter_setValues(Meter* this, char* buffer, int len) {
        h = len / 2;
        if (h > 79)
            h = 79;
-       Vcore_b = Platform_getCpuVcore_b();
+       Vcore_b = Platform_getCpuVcore_b(this);
        if (Vcore_b > 1000) {
            Vcore_b /= 1000;
        }
@@ -38,7 +38,7 @@ static void CpuVcoreMeter_setValues(Meter* this, char* buffer, int len) {
        } else {
            xSnprintf(buf1, h, "%4d mV", Vcore_b);
        }
-       Vcore_l = Platform_getCpuVcore_l();
+       Vcore_l = Platform_getCpuVcore_l(this);
        if (Vcore_l > 1000) {
            Vcore_l /= 1000;
        }
