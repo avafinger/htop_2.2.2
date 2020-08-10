@@ -1,6 +1,7 @@
 /*
 htop - linux/Platform.c
 (C) 2014 Hisham H. Muhammad
+(C) 2020 Alexander Finger
 Released under the GNU GPL, see the COPYING file
 in the source distribution for its full text.
 */
@@ -18,6 +19,13 @@ in the source distribution for its full text.
 #include "CpuTempMeter.h"
 #include "GpuTempMeter.h"
 #include "CpuVcoreMeter.h"
+#include "Eth0_Meter.h"
+#include "Eth1_Meter.h"
+#include "Wlan0_Meter.h"
+#include "Wlan1_Meter.h"
+#include "Armbian_Meter.h"
+#include "OS_Meter.h"
+#include "Kernel_Meter.h"
 #include "MemoryMeter.h"
 #include "SwapMeter.h"
 #include "TasksMeter.h"
@@ -26,6 +34,7 @@ in the source distribution for its full text.
 #include "ClockMeter.h"
 #include "HostnameMeter.h"
 #include "LinuxProcess.h"
+#include "Settings.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -152,6 +161,14 @@ MeterClass* Platform_meterTypes[] = {
    /* --- fix me --- &AllCpuFreqMeter_class, */
    &CpuVcoreMeter_class,
    &GpuTempMeter_class,
+   /* interfaces */
+   &Eth0_Meter_class,
+   &Eth1_Meter_class,
+   &Wlan0_Meter_class,
+   &Wlan1_Meter_class,
+   &OSversion_Meter_class,
+   &Kernelversion_Meter_class,
+   &Armbianversion_Meter_class,   
    NULL
 };
 
@@ -169,10 +186,26 @@ void sleep_ms(int milliseconds) {
 #endif
 }
 
-int Platform_getGpuTemp() {
+int Platform_getGpuTemp(Meter* this) {
    int Temp = 0;
-
-   FILE* fd = fopen("/sys/class/thermal/thermal_zone1/temp", "r");
+   char szbuf[256];
+   Settings* settings = this->pl->settings;
+   char *handler;
+   char *cpu_core_policy;
+   
+   handler = settings->GpuTemp_handler;
+   if (handler[0] != 0) {
+       cpu_core_policy = strchr(handler, '%');
+       if (cpu_core_policy) {
+           strcpy(szbuf, "/sys/class/thermal/thermal_zone1/temp");
+       } else {
+           strcpy(szbuf, handler);
+       }
+   } else {
+       strcpy(szbuf, "/sys/class/thermal/thermal_zone1/temp");
+   }
+   
+   FILE* fd = fopen(szbuf, "r");
    if (!fd) {
        fd = fopen("/sys/devices/virtual/thermal/thermal_zone1/temp", "r");
    }
@@ -185,10 +218,27 @@ int Platform_getGpuTemp() {
 }
 
 
-int Platform_getCpuTemp() {
+int Platform_getCpuTemp(Meter* this) {
    int Temp = 0;
-
-   FILE* fd = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
+   char szbuf[256];
+   Settings* settings = this->pl->settings;
+   char *handler;
+   char *cpu_core_policy;
+   
+   handler = settings->CpuTemp_handler;
+   if (handler[0] != 0) {
+       cpu_core_policy = strchr(handler, '%');
+       if (cpu_core_policy) {
+           strcpy(szbuf, "/sys/class/thermal/thermal_zone0/temp");
+       } else {
+           strcpy(szbuf, handler);
+       }
+   } else {
+      // sleep_ms(30);
+      // xSnprintf(szbuf, sizeof(szbuf), "/sys/devices/system/cpu/cpufreq/policy%d/cpuinfo_cur_freq", cpu);
+      strcpy(szbuf, "/sys/class/thermal/thermal_zone0/temp");
+   }
+   FILE *fd = fopen(szbuf, "r");
    if (!fd) {
        fd = fopen("/sys/devices/virtual/thermal/thermal_zone0/temp", "r");
    }
@@ -200,12 +250,27 @@ int Platform_getCpuTemp() {
    return Temp;
 }
 
-int Platform_getCpuFreq(int cpu) {
+int Platform_getCpuFreq(Meter* this, int cpu) {
    int Freq = 0;
    FILE* fd;
    char szbuf[256];
-   // sleep_ms(30);
-   xSnprintf(szbuf, sizeof(szbuf), "/sys/devices/system/cpu/cpu%d/cpufreq/cpuinfo_cur_freq", cpu);
+   Settings* settings = this->pl->settings;
+   char *handler;
+   char *cpu_core_policy;
+   
+   handler = settings->CpuFreq_handler;
+   if (handler[0] != 0) {
+       cpu_core_policy = strchr(handler, '%');
+       if (cpu_core_policy) {
+           xSnprintf(szbuf, sizeof(szbuf), handler, cpu);
+       } else {
+           strcpy(szbuf, handler);
+       }
+   } else {
+      // sleep_ms(30);
+      // xSnprintf(szbuf, sizeof(szbuf), "/sys/devices/system/cpu/cpufreq/policy%d/cpuinfo_cur_freq", cpu);
+      strcpy(szbuf, "/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq");
+   }
    fd = fopen(szbuf, "r");
    if (fd) {
       int n;
@@ -236,11 +301,27 @@ int Platform_getCpuVcore() {
    return Vcore;
 }
 
-int Platform_getCpuVcore_l() {
+int Platform_getCpuVcore_l(Meter* this) {
    int Vcore = 0;
    FILE* fd;
+   char szbuf[256];
+   Settings* settings = this->pl->settings;
+   char *handler;
+   char *cpu_core_policy;
+   handler = settings->CpuVCore_l_handler;
+   if (handler[0] != 0) {
+       cpu_core_policy = strchr(handler, '%');
+       if (cpu_core_policy) {
+           strcpy(szbuf, "/sys/devices/platform/ff3c0000.i2c/i2c-0/0-001b/regulator/regulator.13/microvolts");
+       } else {
+           strcpy(szbuf, handler);
+       }
+   } else {
+       strcpy(szbuf, "/sys/devices/platform/ff3c0000.i2c/i2c-0/0-001b/regulator/regulator.13/microvolts");
+   }
+   
    // sleep_ms(10);
-   fd = fopen("/sys/devices/platform/ff3c0000.i2c/i2c-0/0-001b/regulator/regulator.13/microvolts", "r");
+   fd = fopen(szbuf, "r");
    if (fd) {
       int n;
       n = fscanf(fd, "%d", &Vcore);
@@ -250,11 +331,26 @@ int Platform_getCpuVcore_l() {
    return Vcore;
 }
 
-int Platform_getCpuVcore_b() {
+int Platform_getCpuVcore_b(Meter* this) {
    int Vcore = 0;
    FILE* fd;
+   char szbuf[256];
+   Settings* settings = this->pl->settings;
+   char *handler;
+   char *cpu_core_policy;
+   handler = settings->CpuVCore_b_handler;
+   if (handler[0] != 0) {
+       cpu_core_policy = strchr(handler, '%');
+       if (cpu_core_policy) {
+           strcpy(szbuf, "/sys/devices/platform/ff3c0000.i2c/i2c-0/0-0040/regulator/regulator.10/microvolts");
+       } else {
+           strcpy(szbuf, handler);
+       }
+   } else {
+       strcpy(szbuf, "/sys/devices/platform/ff3c0000.i2c/i2c-0/0-0040/regulator/regulator.10/microvolts");
+   }
    // sleep_ms(10);
-   fd = fopen("/sys/devices/platform/ff3c0000.i2c/i2c-0/0-0040/regulator/regulator.10/microvolts", "r");
+   fd = fopen(szbuf, "r");   
    if (fd) {
       int n;
       n = fscanf(fd, "%d", &Vcore);
@@ -303,7 +399,6 @@ int Platform_findCpuBigLITTLE(int cpucount, int *cpuBigLITTLE) {
     }
     return cpu;
 }
-
 
 int Platform_getUptime() {
    double uptime = 0;
