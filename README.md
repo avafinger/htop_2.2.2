@@ -19,6 +19,8 @@ Ubuntu 19.10 EOAN deb package
 
 ![Htop screenshot](https://github.com/avafinger/htop_2.2.2/raw/master/htop_2.2.2.png)
 
+![RK3399](https://github.com/avafinger/htop_2.2.2/raw/master/rk3399.png)
+
 ![F2 config](https://github.com/avafinger/htop_2.2.2/raw/master/armbian.png)
 
 # deb packages
