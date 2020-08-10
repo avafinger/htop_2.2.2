@@ -19,6 +19,8 @@ Ubuntu 19.10 EOAN deb package
 
 ![Htop screenshot](https://github.com/avafinger/htop_2.2.2/raw/master/htop_2.2.2.png)
 
+![RK3399](https://github.com/avafinger/htop_2.2.2/raw/master/rk3399.png)
+
 ![F2 config](https://github.com/avafinger/htop_2.2.2/raw/master/armbian.png)
 
 # deb packages
@@ -35,7 +37,7 @@ Ubuntu 19.10 EOAN deb package
 
 The path to grab information depends on how kernel and DTB are built, they change from kernel version and different hardware, handlers have been added to the htop configuration file so you can adjust it to your need.
 
-File configuration is in **~/.config/htop/htoprc** and there is a section you can edit and change the handlers with an editor or programatically.
+File configuration is in **/root/.config/htop** and there is a section you can edit and change the handlers with an editor or programatically.
 
 		# Beware! This file is rewritten by htop when settings are changed in the interface.
 		# The parser is also very primitive, and not human-friendly.
@@ -82,12 +84,18 @@ File configuration is in **~/.config/htop/htoprc** and there is a section you ca
 
 * CpuFreq_handler (CPUFREQ)
 * CpuTemp_handler (CPUTEMP)
-*	CpuVCore_l_handler (CPUVCORE Little cores or normal)
-*	CpuVCore_b_handler (CPUVCORE Big cores)
+* CpuVCore_l_handler (CPUVCORE Little cores or normal)
+* CpuVCore_b_handler (CPUVCORE Big cores)
 * GpuVCore_handler (CPUVCORE)
-*	GpuTemp_handler (GPUTEMP)
+* GpuTemp_handler (GPUTEMP)
 
-** Alias **
+## RK3399 CPUVCORE handlers (kernel 5.7.9)
+
+	CpuVCore_l_handler=/sys/class/regulator/regulator.15/microvolts
+	CpuVCore_b_handler=/sys/class/regulator/regulator.12/microvolts
+
+
+**Alias**
 
 Some kernel changes eth0 / eth1 /wlan0 / wlan1 names like so:
 
