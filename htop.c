@@ -171,7 +171,6 @@ static void millisleep(unsigned long millisec) {
 }
 
 int main(int argc, char** argv) {
-
    char *lc_ctype = getenv("LC_CTYPE");
    if(lc_ctype != NULL)
       setlocale(LC_CTYPE, lc_ctype);
@@ -246,7 +245,8 @@ int main(int argc, char** argv) {
    mvhline(LINES-1, 0, ' ', COLS);
    attroff(CRT_colors[RESET_COLOR]);
    refresh();
-   
+
+   Platform_getEth_stats("", -1, 1);
    CRT_done();
    if (settings->changed)
       Settings_write(settings);

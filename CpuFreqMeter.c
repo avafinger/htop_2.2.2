@@ -65,8 +65,11 @@ static void CpuFreqMeter_setValues(Meter* this, char* buffer, int len) {
        } else {
            xSnprintf(buf_l, ln, "%4d MHz", Freq);
        }
-       
-       xSnprintf(buffer, len, "%s %s (%d)", buf_b, buf_l, pulse);
+
+       if (pulse)
+          xSnprintf(buffer, len, "%s %s (big.LITTLE)", buf_b, buf_l, pulse);
+       else
+          xSnprintf(buffer, len, "%s %s             ", buf_b, buf_l, pulse);
        pulse = !pulse;
        return;
    }

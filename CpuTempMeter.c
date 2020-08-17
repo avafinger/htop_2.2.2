@@ -1,6 +1,6 @@
 /*
 htop - CpuTempMeter.c
-(C) 2018 @lex
+(C) 2020 @lex
 */
 
 #include "CpuTempMeter.h"

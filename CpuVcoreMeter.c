@@ -54,7 +54,7 @@ static void CpuVcoreMeter_setValues(Meter* this, char* buffer, int len) {
        return;
    }
    
-   Vcore = Platform_getCpuVcore();
+   Vcore = Platform_getCpuVcore(this);
    if (Vcore > 1000) {
        Vcore /= 1000;
    }

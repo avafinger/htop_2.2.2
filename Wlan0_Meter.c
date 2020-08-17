@@ -1,6 +1,6 @@
 /*
-htop - Eth0_Meter.c
-(C) 2018 @lex
+htop - Wlan0_Meter.c
+(C) 2020 @lex
 */
 
 #include "Wlan0_Meter.h"

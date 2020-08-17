@@ -10,6 +10,7 @@ in the source distribution for its full text.
 
 #include "CPUMeter.h"
 #include "CpuFreqMeter.h"
+#include "CpuTempMeter.h"
 #include "Header.h"
 #include "ListItem.h"
 #include "Platform.h"
