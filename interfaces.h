@@ -27,6 +27,14 @@ int ReadKeyValue( char *fname, char *key, char *value);
 
 int ReadTokenValue( char *fname, char *key, char *value);
 
+char *ltrim(char *str);
+
+char *rtrim(char *str);
+
+char *trim(char *str);
+
+int FindDataValueFromKey( char *fname, char *key, char *value);
+
 int findIP_interface(char *dev, char *szIP, int bufsz);
 
 #endif

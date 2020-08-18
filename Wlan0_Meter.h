@@ -3,8 +3,8 @@
 #ifndef HEADER_Wlan0_Meter
 #define HEADER_Wlan0_Meter
 /*
-htop - Eth0_Meter.h
-(C) 2018 @lex
+htop - Wlan0_Meter.h
+(C) 2020 @lex
 */
 
 #include "Meter.h"

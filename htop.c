@@ -247,6 +247,14 @@ int main(int argc, char** argv) {
    refresh();
 
    Platform_getEth_stats("", -1, 1);
+   Platform_getIO_stats("", 0, 1);
+   Platform_getIO_stats("", 1, 1);
+   Platform_getIO_stats("", 2, 1);
+   Platform_getIO_stats("", 3, 1);
+   Platform_getIO_stats("", 4, 1);
+   Platform_getIO_stats("", 5, 1);
+   Platform_getIO_stats("", 6, 1);
+   Platform_getIO_stats("", 7, 1);
    CRT_done();
    if (settings->changed)
       Settings_write(settings);
