@@ -19,6 +19,9 @@ in the source distribution for its full text.
 #include "CpuTempMeter.h"
 #include "GpuTempMeter.h"
 #include "CpuVcoreMeter.h"
+#include "Eth0_StatsMeter.h"
+#include "Eth1_StatsMeter.h"
+#include "BlockDevice_ioStatsMeter.h"
 #include "Eth0_Meter.h"
 #include "Eth1_Meter.h"
 #include "Wlan0_Meter.h"
@@ -35,6 +38,7 @@ in the source distribution for its full text.
 #include "HostnameMeter.h"
 #include "LinuxProcess.h"
 #include "Settings.h"
+#include "interfaces.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -49,6 +53,7 @@ in the source distribution for its full text.
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 /*{
 #include "Action.h"
@@ -63,7 +68,43 @@ in the source distribution for its full text.
 #else
 #include <unistd.h> 
 #endif
-#include <string.h> 
+#include <string.h>
+
+
+typedef enum vendor_id_ {
+   VENDOR_INTEL,
+   VENDOR_AMD,
+   VENDOR_CYRIX,
+   VENDOR_VIA,
+   VENDOR_TRANSMETA,
+   VENDOR_UMC,
+   VENDOR_NEXGEN,
+   VENDOR_RISE,
+   VENDOR_SIS,
+   VENDOR_NSC,
+   VENDOR_VORTEX,
+   VENDOR_RDC,
+   VENDOR_UNKNOWN 
+} vendor_id;
+
+typedef struct Stats_ {
+    int rx_over;
+    int tx_over;
+    double rx_bytes;
+    double tx_bytes;
+    double rx_bytes_comp;
+    double tx_bytes_comp;
+} Stats;
+
+typedef struct ioStats_ {
+    int read_over;
+    int write_over;
+    double read_sectors;
+    double write_sectors;
+    double read_sectors_comp;
+    double write_sectors_comp;
+} ioStats;
+
 }*/
 
 #ifndef CLAMP
@@ -74,7 +115,7 @@ ProcessField Platform_defaultFields[] = { PID, USER, PRIORITY, NICE, M_SIZE, M_R
 
 //static ProcessField defaultIoFields[] = { PID, IO_PRIORITY, USER, IO_READ_RATE, IO_WRITE_RATE, IO_RATE, COMM, 0 };
 
-int Platform_cpuBigLITTLE;
+int Platform_cpuBigLITTLE = 0;
 int Platform_numberOfFields = LAST_PROCESSFIELD;
 
 const SignalItem Platform_signals[] = {
@@ -168,7 +209,17 @@ MeterClass* Platform_meterTypes[] = {
    &Wlan1_Meter_class,
    &OSversion_Meter_class,
    &Kernelversion_Meter_class,
-   &Armbianversion_Meter_class,   
+   &Armbianversion_Meter_class,
+   &Eth0_StatsMeter_class,
+   &Eth1_StatsMeter_class,
+   &BlockDevice_sda_ioStatsMeter_class,
+   &BlockDevice_sdb_ioStatsMeter_class,
+   &BlockDevice_sdc_ioStatsMeter_class,
+   &BlockDevice_sdd_ioStatsMeter_class,
+   &BlockDevice_mmcblk0_ioStatsMeter_class,
+   &BlockDevice_mmcblk1_ioStatsMeter_class,
+   &BlockDevice_mmcblk2_ioStatsMeter_class,
+   &BlockDevice_mmcblk3_ioStatsMeter_class,  
    NULL
 };
 
@@ -197,12 +248,12 @@ int Platform_getGpuTemp(Meter* this) {
    if (handler[0] != 0) {
        cpu_core_policy = strchr(handler, '%');
        if (cpu_core_policy) {
-           strcpy(szbuf, "/sys/class/thermal/thermal_zone1/temp");
+           xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/class/thermal/thermal_zone1/temp");
        } else {
-           strcpy(szbuf, handler);
+           xSnprintf(szbuf, sizeof(szbuf), "%s", handler);
        }
    } else {
-       strcpy(szbuf, "/sys/class/thermal/thermal_zone1/temp");
+       xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/class/thermal/thermal_zone1/temp");
    }
    
    FILE* fd = fopen(szbuf, "r");
@@ -217,7 +268,6 @@ int Platform_getGpuTemp(Meter* this) {
    return Temp;
 }
 
-
 int Platform_getCpuTemp(Meter* this) {
    int Temp = 0;
    char szbuf[256];
@@ -229,14 +279,14 @@ int Platform_getCpuTemp(Meter* this) {
    if (handler[0] != 0) {
        cpu_core_policy = strchr(handler, '%');
        if (cpu_core_policy) {
-           strcpy(szbuf, "/sys/class/thermal/thermal_zone0/temp");
+	   xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/class/thermal/thermal_zone0/temp");
        } else {
-           strcpy(szbuf, handler);
+           xSnprintf(szbuf, sizeof(szbuf), "%s", handler);
        }
    } else {
       // sleep_ms(30);
       // xSnprintf(szbuf, sizeof(szbuf), "/sys/devices/system/cpu/cpufreq/policy%d/cpuinfo_cur_freq", cpu);
-      strcpy(szbuf, "/sys/class/thermal/thermal_zone0/temp");
+      xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/class/thermal/thermal_zone0/temp");
    }
    FILE *fd = fopen(szbuf, "r");
    if (!fd) {
@@ -264,12 +314,12 @@ int Platform_getCpuFreq(Meter* this, int cpu) {
        if (cpu_core_policy) {
            xSnprintf(szbuf, sizeof(szbuf), handler, cpu);
        } else {
-           strcpy(szbuf, handler);
+           xSnprintf(szbuf, sizeof(szbuf), "%s", handler);
        }
    } else {
       // sleep_ms(30);
       // xSnprintf(szbuf, sizeof(szbuf), "/sys/devices/system/cpu/cpufreq/policy%d/cpuinfo_cur_freq", cpu);
-      strcpy(szbuf, "/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq");
+      xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq");
    }
    fd = fopen(szbuf, "r");
    if (fd) {
@@ -281,17 +331,27 @@ int Platform_getCpuFreq(Meter* this, int cpu) {
    return Freq;
 }
 
-int Platform_getCpuVcore() {
+int Platform_getCpuVcore(Meter* this) {
    int Vcore = 0;
    FILE* fd;
-   // sleep_ms(10);
-   fd = fopen("/sys/devices/platform/soc/7081400.i2c/i2c-0/0-0036/regulator/regulator.1/microvolts", "r");
-   if (!fd) {
-       fd = fopen("/sys/devices/platform/soc/1f02400.i2c/i2c-4/4-0065/regulator/regulator.5/microvolts", "r");
-       if (!fd) {
-           fd = fopen("/sys/devices/platform/ff3c0000.i2c/i2c-0/0-001b/regulator/regulator.12/microvolts", "r");
+   char szbuf[256];
+   Settings* settings = this->pl->settings;
+   char *handler;
+   char *cpu_core_policy;
+   handler = settings->CpuVCore_l_handler;
+   if (handler[0] != 0) {
+       cpu_core_policy = strchr(handler, '%');
+       if (cpu_core_policy) {
+           xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/devices/platform/ff3c0000.i2c/i2c-0/0-001b/regulator/regulator.13/microvolts");
+       } else {
+           xSnprintf(szbuf, sizeof(szbuf), "%s", handler);
        }
+   } else {
+       xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/devices/platform/ff3c0000.i2c/i2c-0/0-001b/regulator/regulator.13/microvolts");
    }
+   
+   // sleep_ms(10);
+   fd = fopen(szbuf, "r");
    if (fd) {
       int n;
       n = fscanf(fd, "%d", &Vcore);
@@ -507,4 +567,173 @@ char* Platform_getProcessEnv(pid_t pid) {
       }
    }
    return env;
+}
+
+Stats Platform_Eth0_stats;
+Stats Platform_Eth1_stats;
+
+int Platform_getEth_stats(char *devname, int id, int close_fp) {
+    char buffer[BLEN];
+    char *str;
+    char *str_end;
+    char *str_start;
+    unsigned long dump;
+    int ifound;
+    unsigned long rx_o, tx_o;
+    Stats *Platform_Eth_stats;
+    static FILE *fp_proc_net_dev = NULL;
+
+    if (close_fp) {
+        if (fp_proc_net_dev)
+            fclose(fp_proc_net_dev);
+        return 0;
+    }
+
+    if (fp_proc_net_dev == NULL) {
+        if ((fp_proc_net_dev = fopen("/proc/net/dev", "r")) == NULL) {
+            return 0;
+        }
+    }
+    if (id == 0) {
+        Platform_Eth_stats = &Platform_Eth0_stats;
+    } else {
+        Platform_Eth_stats = &Platform_Eth1_stats;
+    }
+
+    /* save rx/tx values */
+    rx_o = Platform_Eth_stats->rx_bytes;
+    tx_o = Platform_Eth_stats->tx_bytes;
+
+    /* do not parse the first two lines as they only contain static garbage */
+    fseek(fp_proc_net_dev, 0, SEEK_SET);
+    fgets(buffer, BLEN, fp_proc_net_dev);
+    fgets(buffer, BLEN, fp_proc_net_dev);
+
+    ifound = 0;
+    while (fgets(buffer, BLEN, fp_proc_net_dev) != NULL) {
+        str_start = buffer;
+        str_end = strchr(buffer, ':');
+        if (str_end != NULL) {
+            *str_end = 0;
+            str_start = trim(str_start);
+            if (strcasecmp(str_start, devname) == 0) {
+                str = str_end + 1;
+                str = ltrim(str);
+                sscanf(str,
+                   "%lg %lu %lu %lu %lu %lu %lu %lu %lg %lu %lu %lu %lu %lu %lu %lu",
+                   &Platform_Eth_stats->rx_bytes, &dump, &dump,
+                   &dump, &dump, &dump, &dump, &dump, &Platform_Eth_stats->tx_bytes,
+                   &dump, &dump, &dump, &dump, &dump, &dump, &dump);
+                ifound = 1;
+                continue;
+            }
+        }
+    }
+    if (ifound) {
+        if (rx_o > Platform_Eth_stats->rx_bytes)
+            Platform_Eth_stats->rx_over++;
+        if (tx_o > Platform_Eth_stats->tx_bytes)
+            Platform_Eth_stats->tx_over++;
+    }
+    return ifound;
+}
+
+double get_wall_time(void) {
+    struct timeval time;
+    if (gettimeofday(&time, NULL))
+        return 0.;
+    return (double) time.tv_sec + (double) time.tv_usec * .000001;
+}
+
+ioStats Platform_BlockDevice_sda_stats;
+ioStats Platform_BlockDevice_sdb_stats;
+ioStats Platform_BlockDevice_sdc_stats;
+ioStats Platform_BlockDevice_sdd_stats;
+ioStats Platform_BlockDevice_mmcblk0_stats;
+ioStats Platform_BlockDevice_mmcblk1_stats;
+ioStats Platform_BlockDevice_mmcblk2_stats;
+ioStats Platform_BlockDevice_mmcblk3_stats;
+
+FILE *fp_block_dev_a[8] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+
+int Platform_getIO_stats(char *devname, int idx, int close_fp) {
+    char block_device[80] = {0};
+    char buffer[BLEN] = {0};
+    unsigned long dump;
+    unsigned long read_o, write_o;
+    ioStats *Platform_io_stats;
+    FILE *fp_block_dev = NULL;
+
+    if (idx > 7)
+        idx = 0;
+
+    fp_block_dev = fp_block_dev_a[idx];
+
+    if (close_fp) {
+        if (fp_block_dev)
+            fclose(fp_block_dev);
+        return 0;
+    }
+    if (devname && *devname == 0)
+        return 0;
+
+    if (fp_block_dev == NULL) {
+        xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/stat", devname);
+        if ((fp_block_dev = fopen(block_device, "r")) == NULL) {
+            return 0;
+        }
+        fp_block_dev_a[idx] = fp_block_dev;
+    }
+
+    switch(idx) {
+    case 0:
+        Platform_io_stats = &Platform_BlockDevice_sda_stats;
+        break;
+    case 1:
+        Platform_io_stats = &Platform_BlockDevice_sdb_stats;
+        break;
+    case 2:
+        Platform_io_stats = &Platform_BlockDevice_sdc_stats;
+        break;
+    case 3:
+        Platform_io_stats = &Platform_BlockDevice_sdd_stats;
+        break;
+    case 4:
+        Platform_io_stats = &Platform_BlockDevice_mmcblk0_stats;
+        break;
+    case 5:
+        Platform_io_stats = &Platform_BlockDevice_mmcblk1_stats;
+        break;
+    case 6:
+        Platform_io_stats = &Platform_BlockDevice_mmcblk2_stats;
+        break;
+    case 7:
+        Platform_io_stats = &Platform_BlockDevice_mmcblk3_stats;
+        break;
+    default:
+        Platform_io_stats = &Platform_BlockDevice_sda_stats;
+        break;
+    }
+    /* save read/write values */
+    read_o = Platform_io_stats->read_sectors;
+    write_o = Platform_io_stats->write_sectors;
+    fseek(fp_block_dev, 0, SEEK_SET);
+    if (fgets(buffer, BLEN - 1, fp_block_dev) != NULL) {
+       sscanf(buffer,
+       "%lu %lu %lg %lu %lu %lu %lg %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu",
+       &dump, &dump, &Platform_io_stats->read_sectors, &dump, &dump,
+       &dump, &Platform_io_stats->write_sectors, &dump, &dump, &dump, &dump,
+       &dump, &dump, &dump, &dump, &dump, &dump);
+    } else {
+      return 0;
+    }
+        
+    while (fgets(buffer, BLEN - 1, fp_block_dev) != NULL)
+        ;
+    
+    if (read_o > Platform_io_stats->read_sectors)
+        Platform_io_stats->read_over++;
+    if (write_o > Platform_io_stats->write_sectors)
+        Platform_io_stats->write_over++;
+    return 1;
 }
