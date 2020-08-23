@@ -27,7 +27,43 @@ in the source distribution for its full text.
 #else
 #include <unistd.h> 
 #endif
-#include <string.h> 
+#include <string.h>
+
+
+typedef enum vendor_id_ {
+   VENDOR_INTEL,
+   VENDOR_AMD,
+   VENDOR_CYRIX,
+   VENDOR_VIA,
+   VENDOR_TRANSMETA,
+   VENDOR_UMC,
+   VENDOR_NEXGEN,
+   VENDOR_RISE,
+   VENDOR_SIS,
+   VENDOR_NSC,
+   VENDOR_VORTEX,
+   VENDOR_RDC,
+   VENDOR_UNKNOWN 
+} vendor_id;
+
+typedef struct Stats_ {
+    int rx_over;
+    int tx_over;
+    double rx_bytes;
+    double tx_bytes;
+    double rx_bytes_comp;
+    double tx_bytes_comp;
+} Stats;
+
+typedef struct ioStats_ {
+    int read_over;
+    int write_over;
+    double read_sectors;
+    double write_sectors;
+    double read_sectors_comp;
+    double write_sectors_comp;
+} ioStats;
+
 
 #ifndef CLAMP
 #define CLAMP(x,low,high) (((x)>(high))?(high):(((x)<(low))?(low):(x)))
@@ -35,7 +71,7 @@ in the source distribution for its full text.
 
 extern ProcessField Platform_defaultFields[];
 
-int Platform_cpuBigLITTLE;
+extern int Platform_cpuBigLITTLE;
 extern int Platform_numberOfFields;
 
 extern const SignalItem Platform_signals[];
@@ -55,7 +91,7 @@ int Platform_getCpuTemp(Meter* this);
 
 int Platform_getCpuFreq(Meter* this, int cpu);
 
-int Platform_getCpuVcore();
+int Platform_getCpuVcore(Meter* this);
 
 int Platform_getCpuVcore_l(Meter* this);
 
@@ -78,5 +114,26 @@ void Platform_setMemoryValues(Meter* this);
 void Platform_setSwapValues(Meter* this);
 
 char* Platform_getProcessEnv(pid_t pid);
+
+Stats Platform_Eth0_stats;
+Stats Platform_Eth1_stats;
+Stats Platform_Wlan0_stats;
+
+int Platform_getEth_stats(char *devname, int id, int close_fp);
+
+double get_wall_time(void);
+
+ioStats Platform_BlockDevice_sda_stats;
+ioStats Platform_BlockDevice_sdb_stats;
+ioStats Platform_BlockDevice_sdc_stats;
+ioStats Platform_BlockDevice_sdd_stats;
+ioStats Platform_BlockDevice_mmcblk0_stats;
+ioStats Platform_BlockDevice_mmcblk1_stats;
+ioStats Platform_BlockDevice_mmcblk2_stats;
+ioStats Platform_BlockDevice_mmcblk3_stats;
+
+extern FILE *fp_block_dev_a[8];
+
+int Platform_getIO_stats(char *devname, int idx, int close_fp);
 
 #endif

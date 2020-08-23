@@ -21,6 +21,7 @@ in the source distribution for its full text.
 #include "CpuVcoreMeter.h"
 #include "Eth0_StatsMeter.h"
 #include "Eth1_StatsMeter.h"
+#include "Wlan0_StatsMeter.h"
 #include "BlockDevice_ioStatsMeter.h"
 #include "Eth0_Meter.h"
 #include "Eth1_Meter.h"
@@ -206,6 +207,7 @@ MeterClass* Platform_meterTypes[] = {
    &Eth0_Meter_class,
    &Eth1_Meter_class,
    &Wlan0_Meter_class,
+   &Wlan0_StatsMeter_class,   
    &Wlan1_Meter_class,
    &OSversion_Meter_class,
    &Kernelversion_Meter_class,
@@ -219,7 +221,7 @@ MeterClass* Platform_meterTypes[] = {
    &BlockDevice_mmcblk0_ioStatsMeter_class,
    &BlockDevice_mmcblk1_ioStatsMeter_class,
    &BlockDevice_mmcblk2_ioStatsMeter_class,
-   &BlockDevice_mmcblk3_ioStatsMeter_class,  
+   &BlockDevice_mmcblk3_ioStatsMeter_class,
    NULL
 };
 
@@ -571,6 +573,7 @@ char* Platform_getProcessEnv(pid_t pid) {
 
 Stats Platform_Eth0_stats;
 Stats Platform_Eth1_stats;
+Stats Platform_Wlan0_stats;
 
 int Platform_getEth_stats(char *devname, int id, int close_fp) {
     char buffer[BLEN];
@@ -597,7 +600,11 @@ int Platform_getEth_stats(char *devname, int id, int close_fp) {
     if (id == 0) {
         Platform_Eth_stats = &Platform_Eth0_stats;
     } else {
-        Platform_Eth_stats = &Platform_Eth1_stats;
+        if (id == 1) {
+            Platform_Eth_stats = &Platform_Eth1_stats;
+        } else {
+            Platform_Eth_stats = &Platform_Wlan0_stats;
+        }
     }
 
     /* save rx/tx values */

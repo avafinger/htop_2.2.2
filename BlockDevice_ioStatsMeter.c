@@ -33,6 +33,7 @@ static void BlockDevice_sda_ioStatsMeter_setValues(Meter* this, char* buffer, in
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "sda");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -81,7 +82,7 @@ static void BlockDevice_sda_ioStatsMeter_setValues(Meter* this, char* buffer, in
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
@@ -118,6 +119,7 @@ static void BlockDevice_sdb_ioStatsMeter_setValues(Meter* this, char* buffer, in
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "sdb");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -166,7 +168,7 @@ static void BlockDevice_sdb_ioStatsMeter_setValues(Meter* this, char* buffer, in
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
@@ -203,6 +205,7 @@ static void BlockDevice_sdc_ioStatsMeter_setValues(Meter* this, char* buffer, in
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "sdc");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -251,7 +254,7 @@ static void BlockDevice_sdc_ioStatsMeter_setValues(Meter* this, char* buffer, in
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
@@ -288,6 +291,7 @@ static void BlockDevice_sdd_ioStatsMeter_setValues(Meter* this, char* buffer, in
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "sdd");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -336,7 +340,7 @@ static void BlockDevice_sdd_ioStatsMeter_setValues(Meter* this, char* buffer, in
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
@@ -373,6 +377,7 @@ static void BlockDevice_mmcblk0_ioStatsMeter_setValues(Meter* this, char* buffer
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "mmcblk0");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -421,7 +426,7 @@ static void BlockDevice_mmcblk0_ioStatsMeter_setValues(Meter* this, char* buffer
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
@@ -458,6 +463,7 @@ static void BlockDevice_mmcblk1_ioStatsMeter_setValues(Meter* this, char* buffer
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "mmcblk1");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -506,7 +512,7 @@ static void BlockDevice_mmcblk1_ioStatsMeter_setValues(Meter* this, char* buffer
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
@@ -543,6 +549,7 @@ static void BlockDevice_mmcblk2_ioStatsMeter_setValues(Meter* this, char* buffer
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "mmcblk2");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -591,7 +598,7 @@ static void BlockDevice_mmcblk2_ioStatsMeter_setValues(Meter* this, char* buffer
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
@@ -628,6 +635,7 @@ static void BlockDevice_mmcblk3_ioStatsMeter_setValues(Meter* this, char* buffer
     if (sec_size == 0) {
         xSnprintf(block_device, sizeof(block_device), "/sys/block/%s/queue/hw_sector_size", "mmcblk3");
         if ((fp = fopen(block_device, "r")) == NULL) {
+            xSnprintf(buffer, len, "%s",  "unavailable");
             return;
         }
         if (fgets(block_device, 79, fp) != NULL) {
@@ -676,7 +684,7 @@ static void BlockDevice_mmcblk3_ioStatsMeter_setValues(Meter* this, char* buffer
 
     } else {
         if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
+            xSnprintf(buffer, len, "%s", "unavailable");
         else
             xSnprintf(buffer, len, "%s", "");
         flash++;
