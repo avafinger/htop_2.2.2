@@ -38,7 +38,7 @@ static void Wlan0_StatsMeter_setValues(Meter* this, char* buffer, int len) {
     if (settings->wlan0_alias[0] != 0) {
         ret = Platform_getEth_stats(settings->wlan0_alias, 2, 0);
     } else {
-        ret = Platform_getEth_stats("wlan0", 0, 0);
+        ret = Platform_getEth_stats("wlan0", 2, 0);
     }
     
     if (ret) {
@@ -51,8 +51,19 @@ static void Wlan0_StatsMeter_setValues(Meter* this, char* buffer, int len) {
         rxspeed = (Platform_Wlan0_stats.rx_bytes - Platform_Wlan0_stats.rx_bytes_comp) / refreshdelay;
         txspeed = (Platform_Wlan0_stats.tx_bytes - Platform_Wlan0_stats.tx_bytes_comp) / refreshdelay;
 
-        xSnprintf(buffer, len, "%.2f KB/s - %.2f KB/s (TX/RX)", (float) txspeed / 1024, (float) rxspeed / 1024);
-
+        txspeed = (float) txspeed / 1000.;
+        rxspeed = (float) rxspeed / 1000.;
+        if (rxspeed < 1000. && txspeed < 1000.) {
+	   xSnprintf(buffer, len, "%.2f KB/s - %.2f KB/s (RX/TX)", (float) rxspeed, (float) txspeed);
+	} else	 {
+	    txspeed = (float) txspeed / 1000.;
+	    rxspeed = (float) rxspeed / 1000.;
+	    if (rxspeed < 1000. && txspeed < 1000.) {
+		xSnprintf(buffer, len, "%.2f MB/s - %.2f MB/s (RX/TX)", (float) rxspeed, (float) txspeed);
+	    } else   {
+		xSnprintf(buffer, len, "%.2f GB/s - %.2f GB/s (RX/TX)", (float) rxspeed, (float) txspeed);
+	    }
+	}
         Platform_Wlan0_stats.rx_bytes_comp = Platform_Wlan0_stats.rx_bytes;
         Platform_Wlan0_stats.tx_bytes_comp = Platform_Wlan0_stats.tx_bytes;
 
