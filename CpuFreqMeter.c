@@ -23,7 +23,6 @@ static void CpuFreqMeter_setValues(Meter* this, char* buffer, int len) {
    char buf_b[32];
    char buf_l[32];
    int ln = sizeof(buf_l);
-   static int pulse = 0;
 
    memset(buf_l, 0, sizeof(buf_l));
    memset(buf_b, 0, sizeof(buf_b));
@@ -66,11 +65,7 @@ static void CpuFreqMeter_setValues(Meter* this, char* buffer, int len) {
            xSnprintf(buf_l, ln, "%4d MHz", Freq);
        }
 
-       if (pulse)
-          xSnprintf(buffer, len, "%s %s (big.LITTLE)", buf_b, buf_l, pulse);
-       else
-          xSnprintf(buffer, len, "%s %s             ", buf_b, buf_l, pulse);
-       pulse = !pulse;
+       xSnprintf(buffer, len, "%s %s (big.LITTLE)", buf_b, buf_l);
        return;
    }
    
@@ -89,7 +84,6 @@ static void CpuFreqMeter_setValues(Meter* this, char* buffer, int len) {
    } else {
        xSnprintf(buffer, len, "%4d MHz", Freq);
    }
-   pulse = !pulse;
 }
 
 MeterClass CpuFreqMeter_class = {

@@ -18,6 +18,7 @@ in the source distribution for its full text.
 #include "Settings.h"
 #include "UsersTable.h"
 #include "Platform.h"
+#include "mountpoint.h"
 
 #include <getopt.h>
 #include <locale.h>
@@ -187,7 +188,7 @@ int main(int argc, char** argv) {
       exit(1);
    }
 #endif
-   
+
    Process_setupColumnWidths();
    
    UsersTable* ut = UsersTable_new();
@@ -255,6 +256,7 @@ int main(int argc, char** argv) {
    Platform_getIO_stats("", 5, 1);
    Platform_getIO_stats("", 6, 1);
    Platform_getIO_stats("", 7, 1);
+   FreeMountPoints();
    CRT_done();
    if (settings->changed)
       Settings_write(settings);

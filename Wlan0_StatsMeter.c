@@ -27,7 +27,6 @@ static void Wlan0_StatsMeter_setValues(Meter* this, char* buffer, int len) {
     double refreshdelay;
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
 
     now = get_wall_time();
     refreshdelay = now - old;
@@ -54,25 +53,24 @@ static void Wlan0_StatsMeter_setValues(Meter* this, char* buffer, int len) {
         txspeed = (float) txspeed / 1000.;
         rxspeed = (float) rxspeed / 1000.;
         if (rxspeed < 1000. && txspeed < 1000.) {
-	   xSnprintf(buffer, len, "%.2f KB/s - %.2f KB/s (RX/TX)", (float) rxspeed, (float) txspeed);
-	} else	 {
-	    txspeed = (float) txspeed / 1000.;
-	    rxspeed = (float) rxspeed / 1000.;
-	    if (rxspeed < 1000. && txspeed < 1000.) {
-		xSnprintf(buffer, len, "%.2f MB/s - %.2f MB/s (RX/TX)", (float) rxspeed, (float) txspeed);
-	    } else   {
-		xSnprintf(buffer, len, "%.2f GB/s - %.2f GB/s (RX/TX)", (float) rxspeed, (float) txspeed);
-	    }
-	}
+            xSnprintf(buffer, len, "%.2f KB/s - %.2f KB/s (RX/TX)", (float) rxspeed, (float) txspeed);
+        } else {
+            txspeed = (float) txspeed / 1000.;
+            rxspeed = (float) rxspeed / 1000.;
+            if (txspeed < 1000. && rxspeed < 1000.) {
+                xSnprintf(buffer, len, "%.2f MB/s - %.2f MB/s (RX/TX)", (float) rxspeed, (float) txspeed);
+            } else {
+                txspeed = (float) txspeed / 1000.;
+                rxspeed = (float) rxspeed / 1000.;
+                xSnprintf(buffer, len, "%.2f GB/s - %.2f GB/s (RX/TX)", (float) rxspeed, (float) txspeed);
+            }
+        }
+
         Platform_Wlan0_stats.rx_bytes_comp = Platform_Wlan0_stats.rx_bytes;
         Platform_Wlan0_stats.tx_bytes_comp = Platform_Wlan0_stats.tx_bytes;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavail");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavail");
     }
 }
 

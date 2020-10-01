@@ -80,6 +80,7 @@ typedef struct Settings_ {
    char eth1_alias[32];
    char wlan0_alias[32];
    char wlan1_alias[32];
+   int mountCount; // mount points
 
    bool changed;
 } Settings;

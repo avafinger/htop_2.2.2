@@ -70,6 +70,8 @@ typedef struct ProcessList_ {
 
    int cpuCount;
    int cpuBigLITTLE;
+   
+   int mountCount;
 
 } ProcessList;
 

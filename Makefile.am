@@ -24,6 +24,7 @@ BatteryMeter.c Process.c ProcessList.c RichString.c ScreenManager.c Settings.c \
 SignalsPanel.c StringUtils.c SwapMeter.c TasksMeter.c UptimeMeter.c CpuFreqMeter.c CpuTempMeter.c GpuTempMeter.c CpuVcoreMeter.c \
 interfaces.c OS_Meter.c	Eth0_Meter.c Eth1_Meter.c Wlan0_Meter.c Wlan1_Meter.c Kernel_Meter.c Armbian_Meter.c \
 Wlan0_StatsMeter.c Eth0_StatsMeter.c Eth1_StatsMeter.c BlockDevice_ioStatsMeter.c \
+mountpoint.c fsUsage_Meter.c Users_Meter.c \
 TraceScreen.c UsersTable.c Vector.c AvailableColumnsPanel.c AffinityPanel.c \
 HostnameMeter.c OpenFilesScreen.c Affinity.c IncSet.c Action.c EnvScreen.c \
 InfoScreen.c XAlloc.c
@@ -37,6 +38,7 @@ ScreenManager.h Settings.h SignalsPanel.h StringUtils.h SwapMeter.h \
 TasksMeter.h UptimeMeter.h CpuFreqMeter.h CpuTempMeter.h GpuTempMeter.h CpuVcoreMeter.h TraceScreen.h UsersTable.h Vector.h Process.h \
 interfaces.h OS_Meter.h	Eth0_Meter.h Eth1_Meter.h Wlan0_Meter.h Wlan1_Meter.h Kernel_Meter.h Armbian_Meter.h \
 Wlan0_StatsMeter.h Eth0_StatsMeter.h Eth1_StatsMeter.h BlockDevice_ioStatsMeter.h \
+mountpoint.h fsUsage_Meter.h Users_Meter.h \
 AffinityPanel.h HostnameMeter.h OpenFilesScreen.h Affinity.h IncSet.h Action.h \
 EnvScreen.h InfoScreen.h XAlloc.h
 

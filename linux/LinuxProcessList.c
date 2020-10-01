@@ -43,6 +43,8 @@ in the source distribution for its full text.
 #include <linux/taskstats.h>
 #endif
 
+#include "mountpoint.h"
+
 /*{
 
 #include "ProcessList.h"
@@ -259,6 +261,9 @@ ProcessList* ProcessList_new(UsersTable* usersTable, Hashtable* pidWhiteList, ui
       this->cpus[i].totalTime = 1;
       this->cpus[i].totalPeriod = 1;
    }
+
+   // Update fs mount count;
+   pl->mountCount = ReadMountPoints( "/proc/mounts" );
 
    return pl;
 }

@@ -30,6 +30,7 @@ in the source distribution for its full text.
 #include "Armbian_Meter.h"
 #include "OS_Meter.h"
 #include "Kernel_Meter.h"
+#include "Users_Meter.h"
 #include "MemoryMeter.h"
 #include "SwapMeter.h"
 #include "TasksMeter.h"
@@ -40,6 +41,8 @@ in the source distribution for its full text.
 #include "LinuxProcess.h"
 #include "Settings.h"
 #include "interfaces.h"
+#include "mountpoint.h"
+#include "fsUsage_Meter.h"
 
 #ifdef WIN32
 #include <windows.h>
@@ -212,6 +215,7 @@ MeterClass* Platform_meterTypes[] = {
    &OSversion_Meter_class,
    &Kernelversion_Meter_class,
    &Armbianversion_Meter_class,
+   &fsUsage_Meter_class,
    &Eth0_StatsMeter_class,
    &Eth1_StatsMeter_class,
    &BlockDevice_sda_ioStatsMeter_class,
@@ -222,6 +226,7 @@ MeterClass* Platform_meterTypes[] = {
    &BlockDevice_mmcblk1_ioStatsMeter_class,
    &BlockDevice_mmcblk2_ioStatsMeter_class,
    &BlockDevice_mmcblk3_ioStatsMeter_class,
+   &Users_Meter_class,
    NULL
 };
 
@@ -321,7 +326,8 @@ int Platform_getCpuFreq(Meter* this, int cpu) {
    } else {
       // sleep_ms(30);
       // xSnprintf(szbuf, sizeof(szbuf), "/sys/devices/system/cpu/cpufreq/policy%d/cpuinfo_cur_freq", cpu);
-      xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq");
+      // xSnprintf(szbuf, sizeof(szbuf), "%s", "/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_cur_freq");
+      xSnprintf(szbuf, sizeof(szbuf), "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq", cpu);
    }
    fd = fopen(szbuf, "r");
    if (fd) {

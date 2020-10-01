@@ -11,9 +11,11 @@ in the source distribution for its full text.
 #include "CPUMeter.h"
 #include "CpuFreqMeter.h"
 #include "CpuTempMeter.h"
+#include "fsUsage_Meter.h"
 #include "Header.h"
 #include "ListItem.h"
 #include "Platform.h"
+#include "mountpoint.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -103,7 +105,11 @@ PanelClass AvailableMetersPanel_class = {
 
 AvailableMetersPanel* AvailableMetersPanel_new(Settings* settings, Header* header, Panel* leftMeters, Panel* rightMeters, ScreenManager* scr, ProcessList* pl) {
    int i;
-    
+   MeterClass* type;
+   int cpus;
+   int key, fs;
+   char buffer[128];
+   
    AvailableMetersPanel* this = AllocThis(AvailableMetersPanel);
    Panel* super = (Panel*) this;
    FunctionBar* fuBar = FunctionBar_newEnterEsc("Add   ", "Done   ");
@@ -119,18 +125,32 @@ AvailableMetersPanel* AvailableMetersPanel_new(Settings* settings, Header* heade
    // Platform_meterTypes[0] should be always (&CPUMeter_class), which we will
    // handle separately in the code below.
    for (i = 1; Platform_meterTypes[i]; i++) {
-      MeterClass* type = Platform_meterTypes[i];
+      type = Platform_meterTypes[i];
       assert(type != &CPUMeter_class);
+      if (type == &fsUsage_Meter_class)
+		  continue;
       const char* label = type->description ? type->description : type->uiName;
-      Panel_add(super, (Object*) ListItem_new(label, i << 16));
+      key = i << 16;
+      Panel_add(super, (Object*) ListItem_new(label, key));
+   }
+   type = &fsUsage_Meter_class;
+   fs = pl->mountCount;
+   if (fs > 1) {
+      for (i = 1; i <= fs; i++) {
+         //char buffer[80];
+         xSnprintf(buffer, 80, "%s %s", type->uiName, GetMountPointSubDirFromIndex( i - 1 ));
+        Panel_add(super, (Object*) ListItem_new(buffer, i | (29 << 16)));
+      }
+   } else {
+      Panel_add(super, (Object*) ListItem_new("fs", 1 | (29 << 16)));
    }
    // Handle (&CPUMeter_class)
-   MeterClass* type = &CPUMeter_class;
-   int cpus = pl->cpuCount;
+   type = &CPUMeter_class;
+   cpus = pl->cpuCount;
    if (cpus > 1) {
       Panel_add(super, (Object*) ListItem_new("CPU average", 0));
       for (i = 1; i <= cpus; i++) {
-         char buffer[50];
+         // char buffer[50];
          xSnprintf(buffer, 50, "%s %d", type->uiName, i);
          Panel_add(super, (Object*) ListItem_new(buffer, i));
       }

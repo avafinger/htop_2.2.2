@@ -26,7 +26,6 @@ static void BlockDevice_sda_ioStatsMeter_setValues(Meter* this, char* buffer, in
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -81,11 +80,7 @@ static void BlockDevice_sda_ioStatsMeter_setValues(Meter* this, char* buffer, in
         Platform_BlockDevice_sda_stats.write_sectors_comp = Platform_BlockDevice_sda_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
@@ -112,7 +107,6 @@ static void BlockDevice_sdb_ioStatsMeter_setValues(Meter* this, char* buffer, in
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -167,11 +161,7 @@ static void BlockDevice_sdb_ioStatsMeter_setValues(Meter* this, char* buffer, in
         Platform_BlockDevice_sdb_stats.write_sectors_comp = Platform_BlockDevice_sdb_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
@@ -198,7 +188,6 @@ static void BlockDevice_sdc_ioStatsMeter_setValues(Meter* this, char* buffer, in
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -253,11 +242,7 @@ static void BlockDevice_sdc_ioStatsMeter_setValues(Meter* this, char* buffer, in
         Platform_BlockDevice_sdc_stats.write_sectors_comp = Platform_BlockDevice_sdc_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
@@ -284,7 +269,6 @@ static void BlockDevice_sdd_ioStatsMeter_setValues(Meter* this, char* buffer, in
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -339,11 +323,7 @@ static void BlockDevice_sdd_ioStatsMeter_setValues(Meter* this, char* buffer, in
         Platform_BlockDevice_sdd_stats.write_sectors_comp = Platform_BlockDevice_sdd_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
@@ -370,7 +350,6 @@ static void BlockDevice_mmcblk0_ioStatsMeter_setValues(Meter* this, char* buffer
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -425,11 +404,7 @@ static void BlockDevice_mmcblk0_ioStatsMeter_setValues(Meter* this, char* buffer
         Platform_BlockDevice_mmcblk0_stats.write_sectors_comp = Platform_BlockDevice_mmcblk0_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
@@ -456,7 +431,6 @@ static void BlockDevice_mmcblk1_ioStatsMeter_setValues(Meter* this, char* buffer
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -511,11 +485,7 @@ static void BlockDevice_mmcblk1_ioStatsMeter_setValues(Meter* this, char* buffer
         Platform_BlockDevice_mmcblk1_stats.write_sectors_comp = Platform_BlockDevice_mmcblk1_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
@@ -542,7 +512,6 @@ static void BlockDevice_mmcblk2_ioStatsMeter_setValues(Meter* this, char* buffer
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -597,11 +566,7 @@ static void BlockDevice_mmcblk2_ioStatsMeter_setValues(Meter* this, char* buffer
         Platform_BlockDevice_mmcblk2_stats.write_sectors_comp = Platform_BlockDevice_mmcblk2_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
@@ -628,7 +593,6 @@ static void BlockDevice_mmcblk3_ioStatsMeter_setValues(Meter* this, char* buffer
     char block_device[80];
     static double old = 0.;
     static double now = 0.;
-    static int flash = 0;
     static unsigned long sec_size = 0;
     FILE *fp;
 
@@ -683,11 +647,7 @@ static void BlockDevice_mmcblk3_ioStatsMeter_setValues(Meter* this, char* buffer
         Platform_BlockDevice_mmcblk3_stats.write_sectors_comp = Platform_BlockDevice_mmcblk3_stats.write_sectors;
 
     } else {
-        if (!(flash % 2))
-            xSnprintf(buffer, len, "%s", "unavailable");
-        else
-            xSnprintf(buffer, len, "%s", "");
-        flash++;
+        xSnprintf(buffer, len, "%s", "unavailable");
     }
 }
 
