@@ -33,6 +33,24 @@ Ubuntu 19.10 EOAN deb package
 
     htop_2.2.2-2_arm64.deb
     
+    
+## Enhanced version
+
+Htop 2.2.2-8 (arm64 and big.LITTLE)
+
+https://github.com/avafinger/htop_2.2.2/releases/tag/v1.8
+
+* Bug fixes
+* CPU Temp
+* CPU Freq
+* GPU Temp
+* Eth0 / Eth1 stats
+* Wlan0 stats
+* fs stats
+* Logged in counter
+* Block dev stats
+
+    
 ## Configurable handlers and Alias
 
 The path to grab information depends on how kernel and DTB are built, they change from kernel version and different hardware, handlers have been added to the htop configuration file so you can adjust it to your need.
