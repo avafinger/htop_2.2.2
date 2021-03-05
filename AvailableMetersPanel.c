@@ -56,7 +56,7 @@ static inline void AvailableMetersPanel_addMeter(Header* header, Panel* panel, M
 static HandlerResult AvailableMetersPanel_eventHandler(Panel* super, int ch) {
    AvailableMetersPanel* this = (AvailableMetersPanel*) super;
    Header* header = this->header;
-   
+
    ListItem* selected = (ListItem*) Panel_getSelected(super);
    int param = selected->key & 0xff;
    int type = selected->key >> 16;
@@ -137,9 +137,11 @@ AvailableMetersPanel* AvailableMetersPanel_new(Settings* settings, Header* heade
    fs = pl->mountCount;
    if (fs > 1) {
       for (i = 1; i <= fs; i++) {
-         //char buffer[80];
-         xSnprintf(buffer, 80, "%s %s", type->uiName, GetMountPointSubDirFromIndex( i - 1 ));
-        Panel_add(super, (Object*) ListItem_new(buffer, i | (29 << 16)));
+         char buffer[80];
+         char *subdir = GetMountPointSubDirFromIndex( i - 1 );
+
+         xSnprintf(buffer, 80, "%s %s", type->uiName, subdir);
+         Panel_add(super, (Object*) ListItem_new(buffer, i | (31 << 16)));
       }
    } else {
       Panel_add(super, (Object*) ListItem_new("fs", 1 | (29 << 16)));

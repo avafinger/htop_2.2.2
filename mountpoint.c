@@ -50,6 +50,8 @@ typedef struct MountPoint_ {
 int mountCount;
 MountPoint *aMountPoint;
 
+static char *fs_error = "Error!";
+
 int ReadMountPoints( char *fname ) {
     FILE* fp;
     char buffer[BLEN];
@@ -59,7 +61,7 @@ int ReadMountPoints( char *fname ) {
     
     fp = fopen(fname, "r");
     if (fp == NULL)
-        return fd;
+        return 0;
 
 	// K.I.S.S
     if (aMountPoint == NULL) {
@@ -97,10 +99,13 @@ MountPoint *GetMountPoints( void ) {
 }
 
 char *GetMountPointSubDirFromIndex( int fs ) {
-	if (fs < 0 || fs > mountCount) {
-		return "Error!";
-	}
-	return aMountPoint[fs].subdir;
+    char *subdir;
+    if (fs < 0 || fs > mountCount) {
+        return fs_error;
+    }
+    subdir = &aMountPoint[fs].subdir[0];
+    /* printf("subdir: %s - %p\n", subdir, (void *)subdir); */
+    return subdir;
 }
 
 void FreeMountPoints( void ) {

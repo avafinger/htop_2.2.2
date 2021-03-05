@@ -31,7 +31,7 @@ typedef struct {
 
 typedef struct Settings_ {
    char* filename;
-   
+
    MeterColumnSettings columns[2];
 
    ProcessField* fields;
@@ -164,12 +164,13 @@ static void Settings_defaultMeters(Settings* this) {
    this->columns[1].modes[r++] = TEXT_METERMODE;
    this->columns[1].names[r] = xStrdup("Uptime");
    this->columns[1].modes[r++] = TEXT_METERMODE;
-   
+
+#if 0
    this->columns[1].names[r] = xStrdup("CpuTemp");
    this->columns[1].modes[r++] = TEXT_METERMODE;
    this->columns[1].names[r] = xStrdup("CpuFreq");
    this->columns[1].modes[r++] = TEXT_METERMODE;
-
+#endif
 }
 
 static void readFields(ProcessField* fields, int* flags, const char* line) {
@@ -383,17 +384,17 @@ bool Settings_write(Settings* this) {
    fprintf(fd, "left_meter_modes="); writeMeterModes(this, fd, 0);
    fprintf(fd, "right_meters="); writeMeters(this, fd, 1);
    fprintf(fd, "right_meter_modes="); writeMeterModes(this, fd, 1);
-   
+
    fprintf(fd, "# SBC hardware and Kernel specific path.\n");
-   fprintf(fd, "# Editable manually.\n");
+   fprintf(fd, "# You can edit/add/remve this settings manually.\n");
    fprintf(fd, "BoardName=%s\n", this->BoardName);
    fprintf(fd, "CpuFreq_handler=%s\n", this->CpuFreq_handler);
    fprintf(fd, "CpuTemp_handler=%s\n", this->CpuTemp_handler);
-   fprintf(fd, "CpuVCore_l_handler=%s\n", this->CpuVCore_l_handler); 
-   fprintf(fd, "CpuVCore_b_handler=%s\n", this->CpuVCore_b_handler);    
-   fprintf(fd, "GpuVCore_handler=%s\n", this->GpuVCore_handler); 
-   fprintf(fd, "GpuTemp_handler=%s\n", this->GpuTemp_handler); 
-   
+   fprintf(fd, "CpuVCore_l_handler=%s\n", this->CpuVCore_l_handler);
+   fprintf(fd, "CpuVCore_b_handler=%s\n", this->CpuVCore_b_handler);
+   fprintf(fd, "GpuVCore_handler=%s\n", this->GpuVCore_handler);
+   fprintf(fd, "GpuTemp_handler=%s\n", this->GpuTemp_handler);
+
    fprintf(fd, "# Wlan / Eth alias\n");
    fprintf(fd, "eth0_alias=%s\n",this->eth0_alias);
    fprintf(fd, "eth1_alias=%s\n",this->eth1_alias);
@@ -446,16 +447,16 @@ Settings* Settings_new(int cpuCount) {
       char* configDir = NULL;
       char* htopDir = NULL;
       if (xdgConfigHome) {
-         this->filename = String_cat(xdgConfigHome, "/htop/htoprc");
+         this->filename = String_cat(xdgConfigHome, "/htop/htoprc-ng");
          configDir = xStrdup(xdgConfigHome);
          htopDir = String_cat(xdgConfigHome, "/htop");
       } else {
-         this->filename = String_cat(home, "/.config/htop/htoprc");
+         this->filename = String_cat(home, "/.config/htop/htoprc-ng");
          configDir = String_cat(home, "/.config");
          htopDir = String_cat(home, "/.config/htop");
       }
-      legacyDotfile = String_cat(home, "/.htoprc");
-      
+      legacyDotfile = String_cat(home, "/.htoprc-ng");
+
       CRT_dropPrivileges();
       (void) mkdir(configDir, 0700);
       (void) mkdir(htopDir, 0700);
@@ -488,7 +489,7 @@ Settings* Settings_new(int cpuCount) {
    if (!ok) {
       this->changed = true;
       // TODO: how to get SYSCONFDIR correctly through Autoconf?
-      char* systemSettings = String_cat(SYSCONFDIR, "/htoprc");
+      char* systemSettings = String_cat(SYSCONFDIR, "/htoprc-ng");
       ok = Settings_read(this, systemSettings);
       free(systemSettings);
    }

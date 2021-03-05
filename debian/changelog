@@ -1,8 +1,42 @@
+htop (2.2.2-10) unstable; urgency=medium
+
+  * gcc incorrectly returns a 32-bit pointer instead of 64-bit, declare the function in the module to fix this.. 
+  * Use new filename for settings, so it does not clash with the original version in case 
+    user install from not up to date distro. Use htoprc-ng as the new file name.
+    ~/.config/htop/htoprc-ng
+    root/.config/htop/htoprc-ng
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Fri, 05 Mar 2021 12:00:00 -0300
+
+htop (2.2.2-9) unstable; urgency=medium
+
+  * Skip loopback dev in fs Meter.
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Thu, 27 Dec 2020 13:00:00 -0300
+
+htop (2.2.2-8) unstable; urgency=medium
+
+  * Add Logged In User Meter.
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Thu, 24 Sep 2020 20:30:00 -0300
+
+htop (2.2.2-7) unstable; urgency=medium
+
+  * Add fs stats (Size,Used,Avail,Use% compatible with df) and CoreTemp / CoreFreq fix.
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Sun, 20 Sep 2020 00:50:00 -0300
+
+htop (2.2.2-6) unstable; urgency=medium
+
+  * Fix KB / MB / GB display res.
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Thu, 10 Sep 2020 12:00:00 -0300
+
 htop (2.2.2-5) unstable; urgency=medium
 
-  * Fix Wlan0 / Wlan1 speed stats
+  * Add Block Device speed stats
 
- -- Alexander Finger <alex.mobigo@gmail.com>  Sun, 30 Aug 2020 10:36:15 -0300
+ -- Alexander Finger <alex.mobigo@gmail.com>  Sun, 30 Aug 2020 20:40:11 -0300
 
 htop (2.2.2-4) unstable; urgency=medium
 
