@@ -141,7 +141,7 @@ AvailableMetersPanel* AvailableMetersPanel_new(Settings* settings, Header* heade
          char *subdir = GetMountPointSubDirFromIndex( i - 1 );
 
          xSnprintf(buffer, 80, "%s %s", type->uiName, subdir);
-         Panel_add(super, (Object*) ListItem_new(buffer, i | (31 << 16)));
+         Panel_add(super, (Object*) ListItem_new(buffer, i | (29 << 16)));
       }
    } else {
       Panel_add(super, (Object*) ListItem_new("fs", 1 | (29 << 16)));
