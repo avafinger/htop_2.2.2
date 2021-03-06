@@ -1,3 +1,9 @@
+htop (2.2.2-11) unstable; urgency=medium
+
+  * Fix Color scheme, add °C and some cosmetics
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Sat, 06 Mar 2021 12:30:00 -0300
+
 htop (2.2.2-10) unstable; urgency=medium
 
   * gcc incorrectly returns a 32-bit pointer instead of 64-bit, declare the function in the module to fix this.. 

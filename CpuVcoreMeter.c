@@ -80,5 +80,5 @@ MeterClass CpuVcoreMeter_class = {
    .attributes = CpuVcoreMeter_attributes,
    .name = "CpuVcore",
    .uiName = "CpuVcore",
-   .caption = "Cpu Vcor: "
+   .caption = "CPU Vcor: "
 };

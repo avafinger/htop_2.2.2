@@ -98,6 +98,6 @@ MeterClass CpuFreqMeter_class = {
    .attributes = CpuFreqMeter_attributes,
    .name = "CpuFreq",
    .uiName = "CpuFreq",
-   .caption = "Cpu Freq: ",
+   .caption = "CPU Freq: ",
 };
 
