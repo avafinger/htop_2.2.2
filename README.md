@@ -1,5 +1,10 @@
 # htop_2.2.2
 
+Ubuntu 20.04 LTS deb package
+
+Fix a Crash when exiting htop, htop-2.2.2-11 deb package released with latest code.
+
+
 Ubuntu 19.10 EOAN deb package
 
 * htop for monitoring CPU Freq, CPU Temp, GPU Temp, VCore on arm64 boards
@@ -35,6 +40,11 @@ Ubuntu 19.10 EOAN deb package
     
     
 ## Enhanced version
+
+Htop 2.2.2-11 (arm64)
+
+https://github.com/avafinger/htop_2.2.2/releases/tag/v1.9
+
 
 Htop 2.2.2-8 (arm64 and big.LITTLE)
 
