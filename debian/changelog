@@ -1,3 +1,9 @@
+htop (2.2.2-12) unstable; urgency=medium
+
+  * Increase Cpu/Gpu Temp resolution
+
+ -- Alexander Finger <alex.mobigo@gmail.com>  Sat, 25 Mar 2021 09:00:00 -0300
+
 htop (2.2.2-11) unstable; urgency=medium
 
   * Fix Color scheme, add °C and some cosmetics
