@@ -1,5 +1,10 @@
 # htop_2.2.2
 
+Ubuntu 20.04 LTS deb package
+
+ * Increase CPU / CPU resolution, htop-2.2.2-12 deb package.
+ * Fix a Crash when exiting htop, htop-2.2.2-11 deb package released with latest code.
+
 Ubuntu 19.10 EOAN deb package
 
 * htop for monitoring CPU Freq, CPU Temp, GPU Temp, VCore on arm64 boards
@@ -8,6 +13,7 @@ Ubuntu 19.10 EOAN deb package
 
 **Branches:**
 
+* rk3568
 * master
   RK3399 mainline kernel
 * BSP_RK3399
