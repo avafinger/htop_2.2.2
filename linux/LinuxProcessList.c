@@ -479,6 +479,14 @@ static bool LinuxProcessList_readStatmFile(LinuxProcess* process, const char* di
    char *p = buf;
    errno = 0;
    process->super.m_size = strtol(p, &p, 10); if (*p == ' ') p++;
+   if (process->super.m_size_prev == 0 || process->super.m_size_prev < process->super.m_size) {
+       process->super.m_size_prev = process->super.m_size;
+   }
+
+   process->super.m_memleak = process->super.m_size - process->super.m_size_prev;
+   if (process->super.m_memleak < 0)
+       process->super.m_memleak = 0;
+
    process->super.m_resident = strtol(p, &p, 10); if (*p == ' ') p++;
    process->m_share = strtol(p, &p, 10); if (*p == ' ') p++;
    process->m_trs = strtol(p, &p, 10); if (*p == ' ') p++;

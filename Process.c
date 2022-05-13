@@ -80,6 +80,7 @@ typedef enum ProcessFields {
    TIME = 50,
    NLWP = 51,
    TGID = 52,
+   M_MEMLEAK = 119,
 } ProcessField;
 
 typedef struct ProcessPidColumn_ {
@@ -434,6 +435,7 @@ void Process_writeField(Process* this, RichString* str, ProcessField field) {
    case MINFLT: Process_colorNumber(str, this->minflt, coloring); return;
    case M_RESIDENT: Process_humanNumber(str, this->m_resident * PAGE_SIZE_KB, coloring); return;
    case M_SIZE: Process_humanNumber(str, this->m_size * PAGE_SIZE_KB, coloring); return;
+   case M_MEMLEAK: Process_humanNumber(str, this->m_memleak * PAGE_SIZE_KB, coloring); return;
    case NICE: {
       xSnprintf(buffer, n, "%3ld ", this->nice);
       attr = this->nice < 0 ? CRT_colors[PROCESS_HIGH_PRIORITY]
@@ -586,6 +588,8 @@ long Process_compare(const void* v1, const void* v2) {
       return (p2->m_resident - p1->m_resident);
    case M_SIZE:
       return (p2->m_size - p1->m_size);
+    case M_MEMLEAK:
+      return (p2->m_memleak - p1->m_memleak);
    case NICE:
       return (p1->nice - p2->nice);
    case NLWP:
