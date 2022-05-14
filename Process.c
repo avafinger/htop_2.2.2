@@ -128,6 +128,9 @@ typedef struct Process_ {
 
    long m_size;
    long m_resident;
+   
+   long m_size_prev;
+   long m_memleak;
 
    int exit_signal;
 
