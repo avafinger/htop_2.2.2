@@ -4,6 +4,7 @@ Ubuntu 20.04 LTS deb package
 
  * Increase CPU / CPU resolution, htop-2.2.2-12 deb package.
  * Fix a Crash when exiting htop, htop-2.2.2-11 deb package released with latest code.
+ * Add column for possible memory leaks (MLEAK)
 
 Ubuntu 19.10 EOAN deb package
 
@@ -22,6 +23,9 @@ Ubuntu 19.10 EOAN deb package
   x64 / Arm kernel
 * armhf
   arm kernel (mainline)
+
+* Find possible memory leaks (update)
+![MLEAK](https://github.com/avafinger/htop_2.2.2/raw/master/htop_mleak.png)
 
 ![Htop screenshot](https://github.com/avafinger/htop_2.2.2/raw/master/htop_2.2.2.png)
 
