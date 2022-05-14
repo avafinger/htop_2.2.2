@@ -25,7 +25,7 @@ Ubuntu 19.10 EOAN deb package
   arm kernel (mainline)
 
 * Find possible memory leaks (update)
-![MLEAK](https://github.com/avafinger/htop_2.2.2/raw/master/htop_mleak.png)
+![MLEAK](https://github.com/avafinger/htop_2.2.2/raw/rk3568/htop_mleak.png)
 
 ![Htop screenshot](https://github.com/avafinger/htop_2.2.2/raw/master/htop_2.2.2.png)
 
